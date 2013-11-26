@@ -6,9 +6,9 @@ using namespace std;
 /*
 Test Scores #2
 Modify the program of Programming Challenge 2 to allow the user to enter name-score
-pairs. For each student raking a test, the user types the student's name followed by the
+pairs. For each student taking a test, the user types the student's name followed by the
 student's integer test score. Modify the sorting function so it takes an array holding the
-student names and an array holding the student test scores. When the sorted lise of
+student names and an array holding the student test scores. When the sorted line of
 scores is displayed, each student's name should be displayed along with his or her score.
 In stepping through the arrays, use pointers rather than array subscripts.
 
@@ -19,7 +19,7 @@ int SIZE;
 
 double calcAverage(int array[]) {
 	double sum = 0;
-	for (int i=0; i<SIZE; i++) sum+=array[i];
+	for (int i=0; i<SIZE; i++) sum+=double(*(array+i));
 	return sum/double(SIZE);
 }
 
@@ -28,16 +28,14 @@ void sortArray(int scores[], string names[]) {
     do {
         swap = false;
         for (int i=0; i<SIZE-1; i++) {
-            if (scores[i] > scores[i+1]) {
-		int temp = scores[i];
-                scores[i] = scores[i+1];
-                scores[i+1] = temp;
-		std::swap(names[i], names[i+1]);
+            if (*(scores+i) > *(scores+i+1)) {
+		std::swap(*(scores+i), *(scores+i+1));
+		std::swap(*(names+i), *(names+i+1));
                 swap = true;
             }
         }
     } while (swap);
-    cout << "Scores:\n";
+    cout << "---------------------------\n\nScores:\n";
     for (int i=0; i<SIZE; i++) cout << *(names+i) << ": " << *(scores+i) << endl;
     cout << "\nClass Average: " << calcAverage(scores) << "%\n";
 }
@@ -56,7 +54,8 @@ int main() {
 	string names[SIZE];
 	for (int i=0; i<SIZE; i++) {
 		cout << "Enter student #" << i+1 << "'s name: ";
-		cin >> names[i];
+		cin.ignore();
+		getline(cin , *(names+i));
 		cout << "Enter test score for student: ";
 		cin >> *(scores+i);
 		while (*(scores+i)<0) {
